@@ -24,9 +24,12 @@ declare module '@vue/runtime-core' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSpace: typeof import('element-plus/es')['ElSpace']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
+    ElTabPane: typeof import('element-plus/es')['ElTabPane']
+    ElTabs: typeof import('element-plus/es')['ElTabs']
     ExampleComponent: typeof import('./src/components/dialogs/ExampleComponent.vue')['default']
     LoginDialog: typeof import('./src/components/dialogs/LoginDialog.vue')['default']
     MainContent: typeof import('./src/components/MainContent.vue')['default']
+    PengaturanAdminDrawer: typeof import('./src/components/drawers/PengaturanAdminDrawer.vue')['default']
     StatusBar: typeof import('./src/components/StatusBar.vue')['default']
     WindowFrame: typeof import('./src/components/WindowFrame.vue')['default']
   }

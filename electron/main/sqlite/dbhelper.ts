@@ -9,12 +9,12 @@ export const getAdmins = () => {
     db("admins")
       .select("*")
       .then((rows) => {
-        logger.info("Berhasil mengambil data user. banyak data: " + rows.length);
         resolve(rows);
+        logger.info("Berhasil mengambil data user. banyak data: " + rows.length);
       })
       .catch((err) => {
-        logger.error("Gagal mengambil data user. alasan : " + err.message);
         reject(err);
+        logger.error("Gagal mengambil data user. alasan : " + err.message);
       });
   });
 };
@@ -23,17 +23,20 @@ export const loginValidation = (nama_admin: string, kata_sandi: string): Promise
   return new Promise((resolve, reject) => {
     logger.info("Melakukan validasi login... nama admin: " + nama_admin);
     db("admins")
-      .select("hak_akses")
       .where("nama_admin", nama_admin)
-      .where("kata_sandi", kata_sandi)
-      .first()
-      .then((response) => {
-        resolve(response);
-        logger.info("Berhasil melakukan validasi");
+      .andWhere("kata_sandi", kata_sandi)
+      .first("hak_akses")
+      .then((hak_akses) => {
+        if (hak_akses === undefined) {
+          reject(new Error("Admin tidak ditemukan."));
+          logger.error("Gagal melakukan validasi login. alasan: Admin tidak ditemukan.");
+        }
+        resolve(hak_akses);
+        logger.info("Berhasil melakukan validasi login.");
       })
       .catch((err) => {
         reject(err);
-        logger.error("Gagal memvalidasi login. alasan: " + err.message);
+        logger.error("Gagal melakukan validasi login. alasan: " + err.message);
       });
   });
 };

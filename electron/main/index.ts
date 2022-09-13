@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { app, BrowserWindow, shell, ipcMain, dialog, session } from "electron";
+import { app, BrowserWindow, shell, ipcMain, dialog, session, globalShortcut } from "electron";
 import { release } from "os";
 import { readdir } from "fs";
 import { join } from "path";
@@ -75,7 +75,9 @@ async function createWindow() {
 
 app.whenReady().then(() => {
   createWindow()
-    .then(() => logger.info("Berhasil menginisialisasi Main Window"))
+    .then(() => {
+      logger.info("Berhasil menginisialisasi Main Window");
+    })
     .catch((err) => logger.error("Gagal menginisialisasi Main Window. alasan : " + err.message));
 
   const vueDevToolsPathWindows = "C:\\Users\\rijal\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 1\\Extensions\\nhdogjmejiglipccpnnnanhbledajbpd";
@@ -89,6 +91,28 @@ app.whenReady().then(() => {
     }
   });
 });
+
+// Non aktifkan shortcut ketika aplikasi sudah diproduksi.
+// Biarkan jika masih pengembangan.
+if (app.isPackaged) {
+  app.on("browser-window-focus", function () {
+    globalShortcut.register("CommandOrControl+R", () => {
+      logger.info("Shortcut Ctrl+R ditekan. mengabaikan...");
+    });
+    globalShortcut.register("CommandOrControl+Shift+R", () => {
+      logger.info("Shortcut Ctrl+Shift+R ditekan. mengabaikan...");
+    });
+    globalShortcut.register("F5", () => {
+      logger.info("Shortcut F5 ditekan. mengabaikan...");
+    });
+  });
+
+  app.on("browser-window-blur", function () {
+    globalShortcut.unregister("CommandOrControl+R");
+    globalShortcut.unregister("CommandOrControl+Shift+R");
+    globalShortcut.unregister("F5");
+  });
+}
 
 app.on("window-all-closed", () => {
   logger.info("********* MENUTUP APLIKASI *********");

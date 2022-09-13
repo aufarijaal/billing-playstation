@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, unref } from "vue";
 import { ClickOutside as vClickOutside } from "element-plus";
+import { useAppStore } from "../store";
+
+const store = useAppStore();
 const windowMenuRef = ref();
 const windowMenuPopoverRef = ref();
 const onClickOutside = () => {
@@ -18,6 +21,11 @@ const toggleMaxmimize = () => {
 const closeApp = () => {
   window.api.closeApp();
 };
+
+const doGantiAdmin = () => {
+  store.loginDialogClosable = true;
+  store.showLoginDialog = true;
+};
 </script>
 
 <template>
@@ -29,8 +37,8 @@ const closeApp = () => {
     <el-button size="small" type="default" text>Pengaturan Admin</el-button>
     <el-button size="small" type="default" text>Pengaturan Sewa</el-button>
     <el-button size="small" type="default" text>Pengaturan Konsumsi</el-button>
-    <el-button size="small" type="default" text>Ganti Admin</el-button>
-    <el-button size="small" type="danger" text>Keluar</el-button>
+    <el-button @click="doGantiAdmin" size="small" type="default" text>Ganti Admin</el-button>
+    <el-button @click="closeApp" size="small" type="danger" text>Keluar</el-button>
   </el-popover>
   <div class="window-frame" style="border-bottom: 1px solid var(--el-border-color)">
     <div class="window-menu" ref="windowMenuRef" v-click-outside="onClickOutside">

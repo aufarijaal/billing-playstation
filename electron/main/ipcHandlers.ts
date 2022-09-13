@@ -17,7 +17,7 @@ ipcMain.handle("do:login", (event, nama_admin: string, kata_sandi: string) => {
   return new Promise((resolve, reject) => {
     dbhelper
       .loginValidation(nama_admin, kata_sandi)
-      .then(() => resolve(true))
+      .then((hak_akses) => resolve(hak_akses))
       .catch((err) => reject(err));
   });
 });

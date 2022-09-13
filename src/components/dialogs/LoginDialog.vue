@@ -1,12 +1,14 @@
+<!-- eslint-disable no-unused-vars -->
 <!-- eslint-disable no-undef -->
 <script setup lang="ts">
 import { useAppStore } from "../../store";
 import { ElMessage, FormInstance, FormRules } from "element-plus";
 import { reactive, ref, onMounted } from "vue";
+import dayjs from "dayjs";
 
 const store = useAppStore();
 const formRef = ref<FormInstance>();
-const dataAdmin = reactive<Omit<Admin, "id" | "kata_sandi">[]>([]);
+const dataAdmin = reactive<Pick<Admin, "nama_admin">[]>([]);
 
 const form = reactive({
   nama_admin: "",
@@ -24,12 +26,23 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       window.api
         .doLogin(form.nama_admin, form.kata_sandi)
-        .then(() => ElMessage.success("Login berhasil. nama: " + form.nama_admin))
+        .then((data: any) => {
+          store.loggedInAdmin.hak_akses = data.hak_akses;
+          store.loggedInAdmin.nama_admin = form.nama_admin;
+          store.loggedInAdmin.tanggal_login = dayjs().format("DD MMMM YYYY HH:mm:ss");
+          store.showLoginDialog = false;
+          ElMessage.success("Login berhasil");
+        })
         .catch((err: Error) => ElMessage.error(err.message));
     } else {
       ElMessage.error("Login gagal. coba lagi");
     }
   });
+};
+
+const closeDialog = () => {
+  store.loginDialogClosable = false;
+  formRef.value?.resetFields();
 };
 
 onMounted(() => {
@@ -43,7 +56,6 @@ onMounted(() => {
         if (counter <= data.length) {
           dataAdmin.push({
             nama_admin: data[counter - 1].nama_admin,
-            hak_akses: data[counter - 1].hak_akses,
           });
           fill();
         }
@@ -58,13 +70,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <el-dialog :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" v-model="store.showLoginDialog" width="250px" align-center class="login-dialog">
+  <!-- Login dialog closable akan true jika di trigger oleh button ganti admin. karena user bisa membatalkan penggantian admin nya -->
+  <el-dialog :show-close="store.loginDialogClosable" :close-on-click-modal="store.loginDialogClosable" :close-on-press-escape="store.loginDialogClosable" v-model="store.showLoginDialog" width="250px" align-center class="login-dialog" @closed="closeDialog">
     <div class="login-form-container">
       <img src="icon.ico" width="40" style="margin-bottom: 18px" />
       <el-form hide-required-asterisk label-position="top" ref="formRef" :model="form" :rules="rules">
         <el-form-item label="Nama admin" prop="nama_admin">
           <el-select placeholder="Pilih nama admin" v-model="form.nama_admin">
-            <el-option v-for="admin in dataAdmin" :key="admin.nama_admin" :value="admin.hak_akses" :label="admin.nama_admin" />
+            <el-option v-for="admin in dataAdmin" :key="admin.nama_admin" :value="admin.nama_admin" :label="admin.nama_admin" />
           </el-select>
         </el-form-item>
         <el-form-item label="Kata sandi" prop="kata_sandi">
