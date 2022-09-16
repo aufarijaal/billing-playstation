@@ -99,3 +99,79 @@ export const resetKataSandi = (id: number, kata_sandi_baru: string): Promise<str
       });
   });
 };
+
+export const ubahNamaAdmin = (id: number, nama_admin_baru: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    logger.info("Melakukan perubaha nama admin... id: " + id);
+    db("admins")
+      .where("id", id)
+      .update(
+        {
+          nama_admin: nama_admin_baru,
+        },
+        "nama_admin",
+      )
+      .then((data) => {
+        if (data[0] === undefined) {
+          reject("Admin tidak ditemukan");
+          logger.error("Id admin yang dikirimkan kemungkinan tidak ada didatabase.");
+        } else {
+          // kembalikan nama admin yang baru
+          resolve(data[0].nama_admin);
+          logger.info("Berhasil melakukan perubahan nama admin ke: " + data[0].nama_admin);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+        logger.error("Gagal melakukan perubahan nama admin. alasan: " + err.message);
+      });
+  });
+};
+
+export const insertAdmin = (nama_admin: string, kata_sandi: string, hak_akses: "penuh" | "parsial"): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    logger.info("Melakukan penambahan data admin baru... nama admin yang diinputkan: " + nama_admin);
+    db("admins")
+      .insert(
+        {
+          nama_admin,
+          kata_sandi,
+          hak_akses,
+        },
+        "nama_admin",
+      )
+      .then((data) => {
+        if (data[0].nama_admin === undefined) {
+          reject("Gagal menambahkan data admin baru(?)");
+          logger.error("Gagal menambahkan data admin baru(?)");
+        } else {
+          resolve(data[0].nama_admin);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+        logger.error("Gagal melakukan penambahan data admin baru. alasan: " + err.message);
+      });
+  });
+};
+
+export const deleteAdmin = (id: number): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    db("admins")
+      .where("id", id)
+      .del()
+      .then((affected_rows: number) => {
+        if (affected_rows === 0) {
+          resolve(affected_rows);
+          logger.error("Gagal melakukan penghapusan data admin. data berubah: " + affected_rows);
+        } else {
+          resolve(affected_rows);
+          logger.info("Berhasil melakukan penghapusan data admin. data berubah: " + affected_rows);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+        logger.error("Gagal melakukan penghapusan data admin. alasan: " + err.message);
+      });
+  });
+};

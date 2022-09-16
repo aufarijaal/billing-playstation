@@ -1,66 +1,35 @@
+<!-- eslint-disable no-undef -->
 <script setup lang="ts">
 import { useAppStore } from "../../store";
 import type { FormInstance, FormRules } from "element-plus";
 import { ref, reactive } from "vue";
 
 const store = useAppStore();
-// eslint-disable-next-line no-undef
 const form = reactive<Omit<Admin, "id">>({
   nama_admin: "",
   kata_sandi: "",
   hak_akses: "parsial",
 });
-// eslint-disable-next-line no-undef
-const tableData: Omit<Admin, "id" | "kata_sandi">[] = [
-  {
-    nama_admin: "master",
-    hak_akses: "penuh",
-  },
-  {
-    nama_admin: "coro",
-    hak_akses: "parsial",
-  },
-  {
-    nama_admin: "master",
-    hak_akses: "penuh",
-  },
-  {
-    nama_admin: "coro",
-    hak_akses: "parsial",
-  },
-  {
-    nama_admin: "master",
-    hak_akses: "penuh",
-  },
-  {
-    nama_admin: "coro",
-    hak_akses: "parsial",
-  },
-  {
-    nama_admin: "master",
-    hak_akses: "penuh",
-  },
-  {
-    nama_admin: "coro",
-    hak_akses: "parsial",
-  },
-  {
-    nama_admin: "master",
-    hak_akses: "penuh",
-  },
-  {
-    nama_admin: "coro",
-    hak_akses: "parsial",
-  },
-  {
-    nama_admin: "master",
-    hak_akses: "penuh",
-  },
-  {
-    nama_admin: "coro",
-    hak_akses: "parsial",
-  },
-];
+const tableData = reactive<Admin[]>([]);
+const getTableData = () => {
+  window.api
+    .getAdmins()
+    .then((datas: Admin[]) => {
+      tableData.length = 0;
+      let counter = 0;
+      const fill = () => {
+        counter++;
+        if (counter <= datas.length) {
+          tableData.push(datas[counter - 1]);
+        }
+        fill();
+      };
+      fill();
+    })
+    .catch((err: Error) => {
+      return [];
+    });
+};
 const formRef = ref<FormInstance>();
 const cekDuplikatNamaAdmin = (rule: any, value: string, callback: CallableFunction) => {
   // if (!value) {
@@ -93,7 +62,7 @@ const resetForm = () => {
 </script>
 
 <template>
-  <el-drawer v-model="store.showDrawerPengaturanAdmin" title="Pengaturan Admin" direction="btt" custom-class="drawer-container" size="calc(100vh - 23px)">
+  <el-drawer v-model="store.showDrawerPengaturanAdmin" title="Pengaturan Admin" direction="btt" custom-class="drawer-container" size="calc(100vh - 23px)" @open="getTableData" @close="tableData.length = 0">
     <div class="pengaturan-admin-container">
       <div class="form-container">
         <el-form inline label-position="top" :model="form" :rules="rules" ref="formRef" hide-required-asterisk>
@@ -112,7 +81,7 @@ const resetForm = () => {
         </el-form>
         <div>
           <el-button type="primary" plain>Tambah</el-button>
-          <el-button type="success" plain>Refresh</el-button>
+          <el-button @click="getTableData" type="success" plain>Refresh</el-button>
         </div>
       </div>
       <div class="table-admin-container">
