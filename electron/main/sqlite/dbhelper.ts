@@ -40,3 +40,62 @@ export const loginValidation = (nama_admin: string, kata_sandi: string): Promise
       });
   });
 };
+
+export const ubahHakAkses = (id: number, hak_akses: "penuh" | "parsial"): Promise<"penuh" | "parsial"> => {
+  return new Promise((resolve, reject) => {
+    logger.info("Melakukan perubahan hak akses... id: " + id);
+    if (hak_akses !== "penuh" && hak_akses !== "parsial") {
+      reject("Hanya menerima nilai 'penuh' atau 'parsial'");
+      logger.error("Parameter perubahan hak akses berisi selain 'penuh' atau 'parsial'");
+    } else {
+      db("admins")
+        .where("id", id)
+        .update(
+          {
+            hak_akses,
+          },
+          "hak_akses",
+        )
+        .then((hak_akses_sekarang) => {
+          if (hak_akses_sekarang[0] === undefined) {
+            reject("Admin tidak ditemukan");
+            logger.error("Id admin yang dikirimkan kemungkinan tidak ada didatabase.");
+          } else {
+            resolve(hak_akses_sekarang[0]);
+            logger.info("Berhasil merubah hak akses. id: " + id + " diubah ke: " + hak_akses_sekarang);
+          }
+        })
+        .catch((err) => {
+          reject(err);
+          logger.error("Gagal merubah hak akses. id: " + id + " | alasan: " + err.message);
+        });
+    }
+  });
+};
+
+export const resetKataSandi = (id: number, kata_sandi_baru: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    logger.info("Melakukan reset kata sandi... id: " + id);
+    db("admins")
+      .where("id", id)
+      .update(
+        {
+          kata_sandi: kata_sandi_baru,
+        },
+        "nama_admin",
+      )
+      .then((data) => {
+        if (data[0] === undefined) {
+          reject("Admin tidak ditemukan");
+          logger.error("Id admin yang dikirimkan kemungkinan tidak ada didatabase.");
+        } else {
+          resolve(data[0].nama_admin);
+          logger.info("Berhasil melakukan reset kata sandi admin bernama: " + data[0].nama_admin);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+        logger.error("Gagal melakukan reset kata sandi. alasan: " + err.message);
+      });
+  });
+};

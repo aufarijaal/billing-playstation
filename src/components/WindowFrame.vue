@@ -33,10 +33,10 @@ const doGantiAdmin = () => {
     <el-button size="small" type="default" text>Sewa</el-button>
     <el-button size="small" type="default" text>Laporan Billing</el-button>
     <el-button size="small" type="default" text>Pengeluaran</el-button>
-    <el-button size="small" type="default" text>Pengaturan Aplikasi</el-button>
-    <el-button size="small" type="default" text>Pengaturan Admin</el-button>
-    <el-button size="small" type="default" text>Pengaturan Sewa</el-button>
-    <el-button size="small" type="default" text>Pengaturan Konsumsi</el-button>
+    <el-button @click="store.showDrawerPengaturanAplikasi = true" size="small" type="default" text>Pengaturan Aplikasi</el-button>
+    <el-button @click="store.showDrawerPengaturanAdmin = true" size="small" type="default" text>Pengaturan Admin</el-button>
+    <el-button @click="store.showDrawerPengaturanSewa = true" size="small" type="default" text>Pengaturan Sewa</el-button>
+    <el-button @click="store.showDrawerPengaturanKonsumsi = true" size="small" type="default" text>Pengaturan Konsumsi</el-button>
     <el-button @click="doGantiAdmin" size="small" type="default" text>Ganti Admin</el-button>
     <el-button @click="closeApp" size="small" type="danger" text>Keluar</el-button>
   </el-popover>

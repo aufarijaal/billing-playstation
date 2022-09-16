@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 
 interface LoggedInAdmin {
   nama_admin: string | undefined;
@@ -17,11 +17,27 @@ export const useAppStore = defineStore("main", () => {
   const loginDialogClosable = ref(false);
   const playCount = ref(0);
 
+  const showDrawerPengaturanAdmin = ref(false);
+  const showDrawerPengaturanAplikasi = ref(false);
+  const showDrawerPengaturanSewa = ref(false);
+  const showDrawerPengaturanKonsumsi = ref(false);
+  const showDrawerLaporanBilling = ref(false);
+  const showDrawerPengeluaran = ref(false);
+  const showDrawerPesananKonsumsi = ref(false);
+
   return {
     loggedInAdmin,
     playCount,
 
     showLoginDialog,
     loginDialogClosable,
+
+    showDrawerPengaturanAdmin,
+    showDrawerPengaturanAplikasi,
+    showDrawerPengaturanKonsumsi,
+    showDrawerPengaturanSewa,
+    showDrawerLaporanBilling,
+    showDrawerPengeluaran,
+    showDrawerPesananKonsumsi,
   };
 });

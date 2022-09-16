@@ -18,6 +18,7 @@
   "plugins": ["vue"],
   "rules": {
     "semi": "error",
-    "quotes": "error"
+    "quotes": "error",
+    "no-unused-vars": "off"
   }
 }

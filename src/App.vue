@@ -2,9 +2,21 @@
 import WindowFrame from "./components/WindowFrame.vue";
 import MainContent from "./components/MainContent.vue";
 import LoginDialog from "./components/dialogs/LoginDialog.vue";
+import DrawerLaporanBilling from "./components/drawers/DrawerLaporanBilling.vue";
+import DrawerPengaturanAdmin from "./components/drawers/DrawerPengaturanAdmin.vue";
+import DrawerPengaturanAplikasi from "./components/drawers/DrawerPengaturanAplikasi.vue";
+import DrawerPengaturanKonsumsi from "./components/drawers/DrawerPengaturanKonsumsi.vue";
+import DrawerPengaturanSewa from "./components/drawers/DrawerPengaturanSewa.vue";
+import DrawerPengeluaran from "./components/drawers/DrawerPengeluaran.vue";
 </script>
 
 <template>
+  <drawer-laporan-billing />
+  <drawer-pengaturan-admin />
+  <drawer-pengaturan-aplikasi />
+  <drawer-pengaturan-konsumsi />
+  <drawer-pengaturan-sewa />
+  <drawer-pengeluaran />
   <login-dialog />
   <window-frame />
   <main-content />
