@@ -44,6 +44,11 @@
     ajv "^6.12.0"
     ajv-keywords "^3.4.1"
 
+"@develoka/angka-rupiah-js@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@develoka/angka-rupiah-js/-/angka-rupiah-js-1.0.3.tgz#5ae32fe0fbe47431a15a117ba371f5486a8a4967"
+  integrity sha512-dkWuclc7reZd6eFGOnnm8vwWIkMbGdceSUILrJKMf2sBhOxc5/J169p2vTS1orX3dRoEZtZqb53ajKKv9zVT5A==
+
 "@electron/get@^1.14.1":
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/@electron/get/-/get-1.14.1.tgz#16ba75f02dffb74c23965e72d617adc721d27f40"
@@ -1864,6 +1869,11 @@ filelist@^1.0.1:
   integrity sha512-w1cEuf3S+DrLCQL7ET6kz+gmlJdbq9J7yXCSjK/OZCPA+qEN1WyF4ZAf0YYJa4/shHJra2t/d/r8SV4Ji+x+8Q==
   dependencies:
     minimatch "^5.0.1"
+
+filesize@^9.0.11:
+  version "9.0.11"
+  resolved "https://registry.yarnpkg.com/filesize/-/filesize-9.0.11.tgz#4ac3a42c084232dd9b2a1da0107f32d42fcfa5e4"
+  integrity sha512-gTAiTtI0STpKa5xesyTA9hA3LX4ga8sm2nWRcffEa1L/5vQwb4mj2MdzMkoHoGv4QzfDshQZuYscQSf8c4TKOA==
 
 fill-range@^7.0.1:
   version "7.0.1"

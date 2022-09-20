@@ -19,5 +19,9 @@
     "prefix": "vstsm",
     "body": ["<script setup lang=\"ts\"$1>", "", "</script>", "", "<template>", "$2", "</template>", "", "<style>", "@media (min-width: 640px) {}", "", "@media (min-width: 768px) {}", "", "@media (min-width: 1024px) {}", "", "@media (min-width: 1280px) {}", "", "@media (min-width: 1536px) {}", "</style>"],
     "description": "Basic Vue 3 typescript template with media queries (based on tailwind)"
+  },
+  "Recursive function": {
+    "prefix": "rec",
+    "body": ["let counter = 0;", "const $1 = () => {", "counter++;", "if (counter <= datas.length) {", "$2", "}", "$1();", "};", "$1();"]
   }
 }

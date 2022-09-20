@@ -49,7 +49,6 @@ onMounted(() => {
   window.api
     .getAdmins()
     .then((data: Admin[]) => {
-      console.log(data);
       let counter = 0;
       const fill = () => {
         counter++;

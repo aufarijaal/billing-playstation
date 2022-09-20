@@ -5,3 +5,7 @@ interface Admin {
   kata_sandi: string;
   hak_akses: "penuh" | "parsial";
 }
+interface Playstation {
+  versi: number;
+  tarif_per_menit: number;
+}

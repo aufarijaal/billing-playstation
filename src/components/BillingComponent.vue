@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import MejaMain from "./MejaMain.vue";
 
 let tabIndex = 2;
 const editableTabsValue = ref("2");
@@ -49,27 +50,25 @@ const handleTabsEdit = (targetName: string, action: "remove" | "add") => {
   <div class="billing">
     <el-tabs v-model="editableTabsValue" type="card" editable class="billing-tabs" @edit="handleTabsEdit">
       <el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.title" :name="item.name">
-        <div class="meja">dsadsdas</div>
+        <meja-main />
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <style>
-.meja {
-  overflow-y: auto;
-  background-color: red;
-  height: 100%;
-}
 .billing {
-  overflow: auto;
+  overflow: hidden;
 }
 .billing-tabs {
   margin-top: 5px;
   margin-left: 5px;
   margin-right: 5px;
-  border: 1px solid salmon;
   height: 95%;
+}
+.el-tab-pane,
+.el-tabs__content {
+  height: 200%;
 }
 .billing-tabs > .el-tabs__header .el-tabs__item {
   font-size: 9pt;

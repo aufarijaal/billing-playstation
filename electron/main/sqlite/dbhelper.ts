@@ -4,6 +4,38 @@ import { db } from "./knexfile";
 // Init database
 db.queryBuilder();
 
+export const truncate = (tableName: string) => {
+  logger.info("Melakukan reset pada tabel " + tableName);
+  return new Promise((resolve, reject) => {
+    db(tableName)
+      .truncate()
+      .then(() => {
+        resolve("Berhasil mereset / menghapus semua data.");
+        logger.info("Berhasil mereset semua data pada tabel " + tableName);
+      })
+      .catch((err) => {
+        reject("Gagal mereset / menghapus semua data. alasan: " + err.message);
+        logger.info(`Gagal mereset / menghapus semua data pada tabel ${tableName}. alasan: ${err.message}`);
+      });
+  });
+};
+
+export const rowCount = (tableName: string, columnName: string) => {
+  logger.info("Mengambil jumlah data pada database...");
+  return new Promise((resolve, reject) => {
+    db(tableName)
+      .count(columnName)
+      .then((counts) => {
+        logger.info(`Berhasil mengambil jumlah data pada tabel ${tableName}, jumlah data ${counts}`);
+        resolve(counts);
+      })
+      .catch((err) => {
+        logger.error(`Gagal mengambil jumlah data pada tabel ${tableName}. alasan: ${err.message}`);
+        reject(`Gagal mengambil jumlah data pada tabel ${tableName}. alasan: ${err.message}`);
+      });
+  });
+};
+
 export const getAdmins = () => {
   return new Promise((resolve, reject) => {
     db("admins")
@@ -156,6 +188,7 @@ export const insertAdmin = (nama_admin: string, kata_sandi: string, hak_akses: "
 };
 
 export const deleteAdmin = (id: number): Promise<number> => {
+  logger.info("Melakukan penghapusan data admin...");
   return new Promise((resolve, reject) => {
     db("admins")
       .where("id", id)
@@ -172,6 +205,182 @@ export const deleteAdmin = (id: number): Promise<number> => {
       .catch((err) => {
         reject(err);
         logger.error("Gagal melakukan penghapusan data admin. alasan: " + err.message);
+      });
+  });
+};
+
+export const getPlaystation = () => {
+  logger.info("Mengambil data Playstation...");
+  return new Promise((resolve, reject) => {
+    db("konfigurasi_ps")
+      .select()
+      .orderBy("versi")
+      .then((rows) => {
+        resolve(rows);
+        logger.info("Berhasil mengambil data Playstation. banyak data: " + rows.length);
+      })
+      .catch((err) => {
+        reject("Gagal mengambil data Playstation. Alasan: " + err.message);
+        logger.error("Gagal mengambil data Playstation. Alasan: " + err.message);
+      });
+  });
+};
+
+export const insertPlaystation = (versi: number, tarif_per_menit: number) => {
+  logger.info("Melakukan penambahan data playstation baru...");
+  return new Promise((resolve, reject) => {
+    db("konfigurasi_ps")
+      .insert(
+        {
+          versi,
+          tarif_per_menit,
+        },
+        "versi",
+      )
+      .then((versi) => {
+        resolve("Berhasil melakukan penambahan data playstation baru. versi: " + versi);
+        logger.info("Berhasil melakukan penambahan data playstation baru. versi: " + versi);
+      })
+      .catch((err) => {
+        reject("Gagal menambahkan data playstation baru. alasan: " + err.message);
+        logger.error("Gagal menambahkan data playstation baru. alasan: " + err.message);
+      });
+  });
+};
+
+export const ubahTarifPlaystation = (versi: number, tarif_per_menit_baru: number) => {
+  logger.info("Melakukan perubahan tarif Playstation...");
+  return new Promise((resolve, reject) => {
+    db("konfigurasi_ps")
+      .where("versi", versi)
+      .update(
+        {
+          tarif_per_menit: tarif_per_menit_baru,
+        },
+        "versi",
+      )
+      .then((versi) => {
+        resolve("Berhasil merubah tarif PS versi: " + versi);
+        logger.info("Berhasil merubah tarif PS versi: " + versi);
+      })
+      .catch((err) => {
+        reject(`Gagal merubah tarif PS versi: ${versi}. Alasan: ${err.message}`);
+        logger.error(`Gagal merubah tarif PS versi: ${versi}. Alasan: ${err.message}`);
+      });
+  });
+};
+export const deletePlaystation = (versi: number) => {
+  logger.info("Melakukan penghapusan data Playstation...");
+  return new Promise((resolve, reject) => {
+    db("konfigurasi_ps")
+      .where("versi", versi)
+      .del()
+      .then(() => {
+        logger.info("Berhasil menghapus data Playstation.");
+        resolve("Berhasil menghapus data Playstation.");
+      })
+      .catch((err) => {
+        reject("Gagal menghapus data Playstation. Alasan: " + err.message);
+        logger.error("Gagal menghapus data Playstation. Alasan: " + err.message);
+      });
+  });
+};
+
+export const insertPaketSewa = (nama_paket: string, harga_12_jam: number) => {
+  logger.info("Melakukan penambahan data paket sewa...");
+  return new Promise((resolve, reject) => {
+    db("paket_sewa")
+      .insert(
+        {
+          nama_paket,
+          harga_12_jam,
+        },
+        "nama_paket",
+      )
+      .then((nama_paket) => {
+        logger.info("Berhasil menambahkan data paket sewa baru. nama paket: " + nama_paket);
+        resolve("Berhasil menambahkan data paket sewa baru. nama paket: " + nama_paket);
+      })
+      .catch((err) => {
+        logger.error("Gagal menambahkan data paket sewa baru. alasan: " + err.message);
+        reject("Gagal menambahkan data paket sewa baru. alasan: " + err.message);
+      });
+  });
+};
+
+export const getPaketSewa = () => {
+  logger.info("Mengambil data paket sewa...");
+  return new Promise((resolve, reject) => {
+    db("paket_sewa")
+      .select()
+      .then((rows) => {
+        logger.info("Berhasil mengambil data paket sewa. banyak data: " + rows.length);
+        resolve(rows);
+      })
+      .catch((err) => {
+        logger.error("Gagal mengambil data paket sewa. alasan: " + err.mesage);
+        reject("Gagal mengambil data paket sewa. alasan: " + err.mesage);
+      });
+  });
+};
+
+export const ubahNamaPaketSewa = (id: number, nama_paket: string) => {
+  logger.info("Mengubah nama paket sewa...");
+  return new Promise((resolve, reject) => {
+    db("paket_sewa")
+      .where("id", id)
+      .update(
+        {
+          nama_paket,
+        },
+        "nama_paket",
+      )
+      .then(() => {
+        logger.info("Berhasil mengubah nama paket sewa");
+        resolve("Berhasil mengubah nama paket sewa");
+      })
+      .catch((err) => {
+        logger.error("Gagal mengubah nama paket sewa. alasan: " + err.message);
+        reject("Gagal mengubah nama paket sewa. alasan: " + err.message);
+      });
+  });
+};
+
+export const ubahHargaPaketSewa = (id: number, harga_12_jam?: number) => {
+  logger.info("Mengubah harga paket sewa...");
+  return new Promise((resolve, reject) => {
+    db("paket_sewa")
+      .where("id", id)
+      .update(
+        {
+          harga_12_jam,
+        },
+        "nama_paket",
+      )
+      .then((nama_paket) => {
+        logger.info("Berhasil mengubah harga paket sewa");
+        resolve("Berhasil mengubah harga paket sewa");
+      })
+      .catch((err) => {
+        logger.error("Gagal mengubah harga paket sewa. alasan: " + err.message);
+        reject("Gagal mengubah harga paket sewa. alasan: " + err.message);
+      });
+  });
+};
+
+export const deletePaketSewa = (id: number) => {
+  logger.info("Melakukan penghapusan data paket sewa");
+  return new Promise((resolve, reject) => {
+    db("paket_sewa")
+      .where("id", id)
+      .del()
+      .then((affected_rows) => {
+        logger.info("Berhasil menghapus data paket sewa. data terhapus: " + affected_rows);
+        resolve("Berhasil menghapus data paket sewa. data terhapus: " + affected_rows);
+      })
+      .catch((err) => {
+        logger.error("Gagal menghapus data paket sewa. alasan: " + err.message);
+        reject("Gagal menghapus data paket sewa. alasan: " + err.message);
       });
   });
 };
