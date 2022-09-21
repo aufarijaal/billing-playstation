@@ -2,26 +2,24 @@
 import { ref } from "vue";
 import MejaMain from "./MejaMain.vue";
 
-let tabIndex = 2;
-const editableTabsValue = ref("2");
+let tabIndex = 1;
+const editableTabsValue = ref("1");
 const editableTabs = ref([
   {
-    title: "Tab 1",
+    title: "Meja 1",
     name: "1",
-    content: "Tab 1 content",
-  },
-  {
-    title: "Tab 2",
-    name: "2",
-    content: "Tab 2 content",
+    content: "",
   },
 ]);
 
 const handleTabsEdit = (targetName: string, action: "remove" | "add") => {
   if (action === "add") {
+    if (editableTabs.value.length === 0) {
+      tabIndex = 0;
+    }
     const newTabName = `${++tabIndex}`;
     editableTabs.value.push({
-      title: "New Tab",
+      title: "Meja " + newTabName,
       name: newTabName,
       content: "",
     });
