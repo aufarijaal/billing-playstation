@@ -179,3 +179,48 @@ ipcMain.handle("delete:paket_sewa", (event, id) => {
       .catch((err) => reject(err));
   });
 });
+
+ipcMain.handle("insert:menu_konsumsi", (event, nama_barang, harga) => {
+  return new Promise((resolve, reject) => {
+    dbhelper
+      .insertMenuKonsumsi(nama_barang, harga)
+      .then((message) => resolve(message))
+      .catch((err) => reject(err));
+  });
+});
+
+ipcMain.handle("get:menu_konsumsi", (event) => {
+  return new Promise((resolve, reject) => {
+    dbhelper
+      .getMenuKonsumsi()
+      .then((rows) => resolve(rows))
+      .catch((err) => reject(err));
+  });
+});
+
+ipcMain.handle("update:nama-menu-konsumsi", (event, id, nama_barang_baru) => {
+  return new Promise((resolve, reject) => {
+    dbhelper
+      .ubahNamaMenuKonsumsi(id, nama_barang_baru)
+      .then((message) => resolve(message))
+      .catch((err) => reject(err));
+  });
+});
+
+ipcMain.handle("update:harga-menu-konsumsi", (event, id, harga_baru) => {
+  return new Promise((resolve, reject) => {
+    dbhelper
+      .ubahHargaMenuKonsumsi(id, harga_baru)
+      .then((message) => resolve(message))
+      .catch((err) => reject(err));
+  });
+});
+
+ipcMain.handle("delete:menu_konsumsi", (event, id) => {
+  return new Promise((resolve, reject) => {
+    dbhelper
+      .deleteMenuKonsumsi(id)
+      .then((message) => resolve(message))
+      .catch((err) => reject(err));
+  });
+});

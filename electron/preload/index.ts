@@ -29,6 +29,12 @@ const ubahHargaPaketSewa = (id: number, harga_baru: number) => ipcRenderer.invok
 const ubahNamaPaketSewa = (id: number, nama_paket_baru: string) => ipcRenderer.invoke("update:nama-paket-sewa", id, nama_paket_baru);
 const deletePaketSewa = (id: number) => ipcRenderer.invoke("delete:paket_sewa", id);
 
+const getMenuKonsumsi = () => ipcRenderer.invoke("get:menu_konsumsi");
+const insertMenuKonsumsi = (nama_barang: string, harga: string) => ipcRenderer.invoke("insert:menu_konsumsi", nama_barang, harga);
+const ubahHargaMenuKonsumsi = (id: number, harga_baru: number) => ipcRenderer.invoke("update:harga-menu-konsumsi", id, harga_baru);
+const ubahNamaMenuKonsumsi = (id: number, nama_barang_baru: string) => ipcRenderer.invoke("update:nama-menu-konsumsi", id, nama_barang_baru);
+const deleteMenuKonsumsi = (id: number) => ipcRenderer.invoke("delete:menu_konsumsi", id);
+
 const API = {
   minimize,
   toggleMaxmimize,
@@ -57,6 +63,12 @@ const API = {
   ubahHargaPaketSewa,
   ubahNamaPaketSewa,
   deletePaketSewa,
+
+  getMenuKonsumsi,
+  insertMenuKonsumsi,
+  ubahHargaMenuKonsumsi,
+  ubahNamaMenuKonsumsi,
+  deleteMenuKonsumsi,
 };
 
 contextBridge.exposeInMainWorld("api", API);

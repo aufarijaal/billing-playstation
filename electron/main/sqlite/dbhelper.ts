@@ -384,3 +384,102 @@ export const deletePaketSewa = (id: number) => {
       });
   });
 };
+
+export const insertMenuKonsumsi = (nama_barang: string, harga: number) => {
+  logger.info("Melakukan penambahan data menu konsumsi...");
+  return new Promise((resolve, reject) => {
+    db("menu_konsumsi")
+      .insert(
+        {
+          nama_barang,
+          harga,
+        },
+        "nama_barang",
+      )
+      .then((nama_barang) => {
+        logger.info("Berhasil menambahkan data menu konsumsi baru. nama paket: " + nama_barang);
+        resolve("Berhasil menambahkan data menu konsumsi baru. nama paket: " + nama_barang);
+      })
+      .catch((err) => {
+        logger.error("Gagal menambahkan data menu konsumsi baru. alasan: " + err.message);
+        reject("Gagal menambahkan data menu konsumsi baru. alasan: " + err.message);
+      });
+  });
+};
+
+export const getMenuKonsumsi = () => {
+  logger.info("Mengambil data menu konsumsi...");
+  return new Promise((resolve, reject) => {
+    db("menu_konsumsi")
+      .select()
+      .then((rows) => {
+        logger.info("Berhasil mengambil data menu konsumsi. banyak data: " + rows.length);
+        resolve(rows);
+      })
+      .catch((err) => {
+        logger.error("Gagal mengambil data menu konsumsi. alasan: " + err.mesage);
+        reject("Gagal mengambil data menu konsumsi. alasan: " + err.mesage);
+      });
+  });
+};
+
+export const ubahNamaMenuKonsumsi = (id: number, nama_barang: string) => {
+  logger.info("Mengubah nama menu konsumsi...");
+  return new Promise((resolve, reject) => {
+    db("menu_konsumsi")
+      .where("id", id)
+      .update(
+        {
+          nama_barang,
+        },
+        "nama_barang",
+      )
+      .then(() => {
+        logger.info("Berhasil mengubah nama menu konsumsi");
+        resolve("Berhasil mengubah nama menu konsumsi");
+      })
+      .catch((err) => {
+        logger.error("Gagal mengubah nama menu konsumsi. alasan: " + err.message);
+        reject("Gagal mengubah nama menu konsumsi. alasan: " + err.message);
+      });
+  });
+};
+
+export const ubahHargaMenuKonsumsi = (id: number, harga: number) => {
+  logger.info("Mengubah harga menu konsumsi...");
+  return new Promise((resolve, reject) => {
+    db("menu_konsumsi")
+      .where("id", id)
+      .update(
+        {
+          harga,
+        },
+        "nama_barang",
+      )
+      .then((nama_barang) => {
+        logger.info("Berhasil mengubah harga menu konsumsi");
+        resolve("Berhasil mengubah harga menu konsumsi");
+      })
+      .catch((err) => {
+        logger.error("Gagal mengubah harga menu konsumsi. alasan: " + err.message);
+        reject("Gagal mengubah harga menu konsumsi. alasan: " + err.message);
+      });
+  });
+};
+
+export const deleteMenuKonsumsi = (id: number) => {
+  logger.info("Melakukan penghapusan data menu konsumsi");
+  return new Promise((resolve, reject) => {
+    db("menu_konsumsi")
+      .where("id", id)
+      .del()
+      .then((affected_rows) => {
+        logger.info("Berhasil menghapus data menu konsumsi. data terhapus: " + affected_rows);
+        resolve("Berhasil menghapus data menu konsumsi. data terhapus: " + affected_rows);
+      })
+      .catch((err) => {
+        logger.error("Gagal menghapus data menu konsumsi. alasan: " + err.message);
+        reject("Gagal menghapus data menu konsumsi. alasan: " + err.message);
+      });
+  });
+};
