@@ -1,12 +1,22 @@
 <!-- eslint-disable no-undef -->
 <script setup lang="ts">
-import { onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
+
+interface Konsumsi extends MenuKonsumsi {
+  jumlah: number;
+}
 
 const props = defineProps({
-  "nomor-meja": {
+  nomorMeja: {
     type: Number,
     required: true,
   },
+});
+
+const konsumsi = reactive<Konsumsi[]>([]);
+const totalBayarKonsumsi = computed(() => {
+  const harga_array = konsumsi.map((each) => each.harga);
+  return harga_array.reduce((total, current) => total + current);
 });
 const playstationData = reactive<Playstation[]>([]);
 const psTerpilih = ref(1);
@@ -29,12 +39,13 @@ onMounted(() => {
 </script>
 
 <template>
+  <el-dialog> </el-dialog>
   <div class="meja-main-container">
     <div class="meja-main">
       <div class="meja-main-indikator">
-        <div class="label-nomor-meja label-nomor-meja-primary">MEJA {{ props["nomor-meja"] }}</div>
+        <div class="label-nomor-meja label-nomor-meja-primary">MEJA {{ props.nomorMeja }}</div>
         <el-progress :width="300" type="dashboard" :percentage="80">
-          <template #default="{ percentage }">
+          <template #default>
             <div style="display: flex; gap: 10px; flex-direction: column; justify-content: center; align-items: center">
               <span class="timer-text">00:00:00</span>
               <div style="margin-bottom: 10px">
@@ -59,7 +70,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="label-nomor-meja label-nomor-meja-alt">MEJA 30</div>
+      <div class="label-nomor-meja label-nomor-meja-alt">MEJA {{ props.nomorMeja }}</div>
       <div class="meja-main-operasi">
         <el-button type="primary" size="large" class="btn-los">Los</el-button>
         <el-button type="success" size="large" class="btn-diwaktu">Diwaktu</el-button>

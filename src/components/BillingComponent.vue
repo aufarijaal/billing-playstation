@@ -1,54 +1,75 @@
+<!-- eslint-disable no-undef -->
 <script setup lang="ts">
-import { ref } from "vue";
+import { ElMessage, TabPanelName } from "element-plus";
+import { reactive, ref } from "vue";
 import MejaMain from "./MejaMain.vue";
 
-let tabIndex = 1;
-const editableTabsValue = ref("1");
-const editableTabs = ref([
+const showTambahMejaDialog = ref(false);
+const tabAktif = ref("1");
+const playstationData = reactive<Playstation[]>([]);
+const getPlaystationData = () => {
+  playstationData.length = 0;
+  window.api
+    .getPlaystation()
+    .then((rows: Playstation[]) => {
+      rows.forEach((each) => {
+        playstationData.push(each);
+      });
+    })
+    .then(() => {
+      return [];
+    });
+};
+const newTab = reactive({
+  title: "",
+  identifier: "",
+  versiPs: 1,
+});
+const tabs = reactive([
   {
     title: "Meja 1",
-    name: "1",
-    content: "",
+    identifier: "1",
   },
 ]);
-
-const handleTabsEdit = (targetName: string, action: "remove" | "add") => {
+const handleEdit = (paneName: TabPanelName | undefined, action: "add" | "remove") => {
   if (action === "add") {
-    if (editableTabs.value.length === 0) {
-      tabIndex = 0;
-    }
-    const newTabName = `${++tabIndex}`;
-    editableTabs.value.push({
-      title: "Meja " + newTabName,
-      name: newTabName,
-      content: "",
-    });
-    editableTabsValue.value = newTabName;
+    // tabs.push({
+    //   title: "Meja 2",
+    //   identifier: "2",
+    // });
+    ElMessage.success("Tombol tambah meja diklik");
+    showTambahMejaDialog.value = true;
   } else if (action === "remove") {
-    const tabs = editableTabs.value;
-    let activeName = editableTabsValue.value;
-    if (activeName === targetName) {
-      tabs.forEach((tab, index) => {
-        if (tab.name === targetName) {
-          const nextTab = tabs[index + 1] || tabs[index - 1];
-          if (nextTab) {
-            activeName = nextTab.name;
-          }
-        }
-      });
-    }
-
-    editableTabsValue.value = activeName;
-    editableTabs.value = tabs.filter((tab) => tab.name !== targetName);
+    ElMessage.warning("Tombol hapus meja diklik");
+  }
+};
+const validateAddTab = () => {
+  if (tabs.some((each) => each.title === newTab.title)) {
+    ElMessage.warning(`Nama meja "${newTab.title}" sudah ada!`);
   }
 };
 </script>
 
 <template>
   <div class="billing">
-    <el-tabs v-model="editableTabsValue" type="card" editable class="billing-tabs" @edit="handleTabsEdit">
-      <el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.title" :name="item.name">
-        <meja-main />
+    <el-dialog v-model="showTambahMejaDialog" width="400px" title="Tambah Meja">
+      <div style="display: flex; align-items: center; justify-content: space-around; gap: 0; margin-bottom: 10px">
+        <div class="secondary-text">Nama Meja</div>
+        <el-input v-model="newTab.title" size="small" style="width: 200px" />
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-around; gap: 0">
+        <div class="secondary-text">Versi Ps</div>
+        <el-select size="small" v-model="newTab.versiPs" style="width: 200px; margin-left: 10px" @focus="getPlaystationData">
+          <el-option v-for="item in playstationData" :label="item.tarif_per_menit" :key="item.versi" :value="item.versi" />
+        </el-select>
+      </div>
+      <div style="display: flex; justify-content: center; margin-top: 20px">
+        <el-button size="small" type="success" plain @click="validateAddTab">Tambah</el-button>
+      </div>
+    </el-dialog>
+    <el-tabs type="card" v-model="tabAktif" class="billing-tabs" editable @edit="handleEdit">
+      <el-tab-pane v-for="tab in tabs" :key="tab.identifier" :label="tab.title" :name="tab.identifier">
+        <meja-main :nomor-meja="parseInt(tab.identifier)" />
       </el-tab-pane>
     </el-tabs>
   </div>

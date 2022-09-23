@@ -41,8 +41,13 @@ const doGantiAdmin = () => {
     <el-button @click="closeApp" size="small" type="danger" text>Keluar</el-button>
   </el-popover>
   <div class="window-frame" style="border-bottom: 1px solid var(--el-border-color)">
-    <div class="window-menu" ref="windowMenuRef" v-click-outside="onClickOutside">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="M14 5H2V3h12v2zm0 4H2V7h12v2zM2 13h12v-2H2v2z" clip-rule="evenodd" /></svg>
+    <div class="window-left-buttons">
+      <div class="window-menu" ref="windowMenuRef" v-click-outside="onClickOutside">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="M14 5H2V3h12v2zm0 4H2V7h12v2zM2 13h12v-2H2v2z" clip-rule="evenodd" /></svg>
+      </div>
+      <div class="window-button btn-tambah-meja">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="m7.116 8l-4.558 4.558l.884.884L8 8.884l4.558 4.558l.884-.884L8.884 8l4.558-4.558l-.884-.884L8 7.116L3.442 2.558l-.884.884L7.116 8z" clip-rule="evenodd" /></svg>
+      </div>
     </div>
     <div class="window-title">Billing playstation</div>
     <div class="window-operation">
@@ -85,7 +90,8 @@ const doGantiAdmin = () => {
   height: 100%;
   z-index: 100000;
 }
-.window-menu {
+.window-menu,
+.btn-tambah-meja {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +100,8 @@ const doGantiAdmin = () => {
   height: 100%;
   width: 28px;
 }
-.window-menu:hover {
+.window-menu:hover,
+.btn-tambah-meja:hover {
   background-color: var(--el-fill-color);
 }
 .window-button {
@@ -110,5 +117,12 @@ const doGantiAdmin = () => {
 }
 .window-close:hover {
   background-color: var(--el-color-danger);
+}
+.window-left-buttons {
+  display: flex;
+  height: 100%;
+}
+.btn-tambah-meja > svg {
+  transform: rotate(45deg);
 }
 </style>

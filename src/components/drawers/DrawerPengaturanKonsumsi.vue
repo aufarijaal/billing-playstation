@@ -6,44 +6,44 @@ import { ElMessage, FormInstance, FormRules } from "element-plus";
 import toRupiah from "@develoka/angka-rupiah-js";
 
 const formPengaturanKonsumsiRef = ref<FormInstance>();
-const formPengaturanKonsumsi = reactive<PaketSewa>({
-  nama_paket: "",
-  harga_12_jam: 0,
+const formPengaturanKonsumsi = reactive<MenuKonsumsi>({
+  nama_barang: "",
+  harga: 0,
 });
 const formPengaturanKonsumsiRules = reactive<FormRules>({
-  nama_paket: [{ required: true, message: "Nama paket tidak boleh kosong.", trigger: "change" }],
-  harga_12_jam: [{ required: true, message: "Harga tidak boleh kosong / 0", trigger: "blur", type: "number" }],
+  nama_barang: [{ required: true, message: "Nama menu tidak boleh kosong.", trigger: "change" }],
+  harga: [{ required: true, message: "Harga tidak boleh kosong / 0", trigger: "blur", type: "number" }],
 });
-const paketSewaData = reactive<PaketSewa[]>([]);
+const menuKonsumsiData = reactive<MenuKonsumsi[]>([]);
 const store = useAppStore();
-const ubahHargaPaketSewaValue = ref(0);
-const ubahHargaPaketSewaValueRupiah = computed(() => {
-  return toRupiah(ubahHargaPaketSewaValue.value, {});
+const ubahHargaMenuKonsumsiValue = ref(0);
+const ubahHargaMenuKonsumsiValueRupiah = computed(() => {
+  return toRupiah(ubahHargaMenuKonsumsiValue.value, {});
 });
-const getDataPaketSewa = () => {
-  paketSewaData.length = 0;
+const getDataMenuKonsumsi = () => {
+  menuKonsumsiData.length = 0;
   window.api
-    .getPaketSewa()
-    .then((rows: PaketSewa[]) => {
+    .getMenuKonsumsi()
+    .then((rows: MenuKonsumsi[]) => {
       rows.forEach((each) => {
-        paketSewaData.push(each);
+        menuKonsumsiData.push(each);
       });
     })
     .then(() => {
       return [];
     });
 };
-const insertPaketSewa = async (formEl: FormInstance | undefined) => {
+const insertMenuKonsumsi = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
       window.api
-        .insertPaketSewa(formPengaturanKonsumsi.nama_paket, formPengaturanKonsumsi.harga_12_jam)
+        .insertMenuKonsumsi(formPengaturanKonsumsi.nama_barang, formPengaturanKonsumsi.harga)
         .then((message: string) => ElMessage.success(message))
         .catch((err: Error) => ElMessage.error(err.message))
         .finally(() => {
           resetForm();
-          getDataPaketSewa();
+          getDataMenuKonsumsi();
         });
     } else {
       resetForm();
@@ -54,72 +54,71 @@ const insertPaketSewa = async (formEl: FormInstance | undefined) => {
 const resetForm = () => {
   formPengaturanKonsumsiRef.value?.resetFields();
 };
-const ubahHargaPaketSewa = (id: number) => {
-  if (isNaN(ubahHargaPaketSewaValue.value) || ubahHargaPaketSewaValue.value.toString() === "") {
-    ubahHargaPaketSewaValue.value = 0;
+const ubahHargaMenuKonsumsi = (id: number) => {
+  if (isNaN(ubahHargaMenuKonsumsiValue.value) || ubahHargaMenuKonsumsiValue.value.toString() === "") {
+    ubahHargaMenuKonsumsiValue.value = 0;
     ElMessage.error("Isi input dengan benar");
   } else {
     window.api
-      .ubahHargaPaketSewa(id, ubahHargaPaketSewaValue.value)
+      .ubahHargaMenuKonsumsi(id, ubahHargaMenuKonsumsiValue.value)
       .then((message: string) => ElMessage.success(message))
       .catch((err: Error) => ElMessage.error(err.message))
       .finally(() => {
-        ubahHargaPaketSewaValue.value = 0;
-        getDataPaketSewa();
+        ubahHargaMenuKonsumsiValue.value = 0;
+        getDataMenuKonsumsi();
       });
   }
 };
-const deletePaketSewa = (versi: number) => {
+const deleteMenuKonsumsi = (versi: number) => {
   window.api
-    .deletePaketSewa(versi)
+    .deleteMenuKonsumsi(versi)
     .then((message: string) => ElMessage.success(message))
     .catch((err: Error) => ElMessage.error(err.message))
-    .finally(getDataPaketSewa());
+    .finally(getDataMenuKonsumsi());
 };
 </script>
 
 <template>
-  <el-drawer v-model="store.showDrawerPengaturanKonsumsi" title="Pengaturan Sewa" direction="btt" custom-class="drawer-pengaturan-sewa-container" size="calc(100vh - 23px)" @open="getDataPaketSewa" @closed="paketSewaData.length = 0">
-    <div class="pengaturan-sewa-container">
-      <el-form label-position="top" class="form-pengaturan-sewa" ref="formPengaturanKonsumsiRef" :rules="formPengaturanKonsumsiRules" :model="formPengaturanKonsumsi" hide-required-asterisk>
-        <el-form-item prop="nama_paket" label="Nama Paket">
-          <el-input v-model="formPengaturanKonsumsi.nama_paket" />
+  <el-drawer v-model="store.showDrawerPengaturanKonsumsi" title="Pengaturan Menu Konsumsi" direction="btt" custom-class="drawer-pengaturan-menu-konsumsi-container" size="calc(100vh - 23px)" @open="getDataMenuKonsumsi" @closed="menuKonsumsiData.length = 0">
+    <div class="pengaturan-menu-konsumsi-container">
+      <el-form label-position="top" class="form-pengaturan-menu-konsumsi" ref="formPengaturanKonsumsiRef" :rules="formPengaturanKonsumsiRules" :model="formPengaturanKonsumsi" hide-required-asterisk>
+        <el-form-item prop="nama_barang" label="Nama Barang">
+          <el-input v-model="formPengaturanKonsumsi.nama_barang" />
         </el-form-item>
-        <el-form-item label="Harga / 12 Jam" prop="harga_12_jam">
-          <el-input v-model.number="formPengaturanKonsumsi.harga_12_jam" />
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="insertPaketSewa(formPengaturanKonsumsiRef)" type="primary">Tambah</el-button>
+        <el-form-item label="Harga" prop="harga">
+          <el-input v-model.number="formPengaturanKonsumsi.harga" />
         </el-form-item>
         <el-form-item>
-          <el-button @click="getDataPaketSewa" type="success">Refresh</el-button>
+          <el-button @click="insertMenuKonsumsi(formPengaturanKonsumsiRef)" type="primary">Tambah</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="getDataMenuKonsumsi" type="success">Refresh</el-button>
         </el-form-item>
       </el-form>
       <div class="secondary-text" style="text-align: center; margin-bottom: 20px">
-        Input: Nama Paket <span style="color: var(--el-color-warning)">{{ formPengaturanKonsumsi.nama_paket }}</span
-        >, Harga <span style="color: var(--el-color-success)">{{ toRupiah(formPengaturanKonsumsi.harga_12_jam) }}</span> (1 hari <span style="color: var(--el-color-primary)">{{ toRupiah(formPengaturanSewa.harga_12_jam * 2) }}</span
-        >)
+        Input: Nama Barang <span style="color: var(--el-color-warning)">{{ formPengaturanKonsumsi.nama_barang }}</span
+        >, Harga <span style="color: var(--el-color-success)">{{ toRupiah(formPengaturanKonsumsi.harga) }}</span>
       </div>
-      <el-table border stripe :data="paketSewaData" style="width: 600px; margin: 0 auto 0 auto">
-        <el-table-column prop="nama_paket" label="Nama Paket" />
-        <el-table-column prop="harga_12_jam" label="Harga 12 Jam" />
+      <el-table border stripe :data="menuKonsumsiData" style="width: 600px; margin: 0 auto 0 auto">
+        <el-table-column prop="nama_barang" label="Nama Barang" />
+        <el-table-column prop="harga" label="Harga" />
         <el-table-column label="Aksi">
           <template #default="scope">
-            <div class="column-aksi-sewa">
+            <div class="column-aksi-menu-konsumsi">
               <el-popover width="max-content" trigger="click">
                 <template #reference>
                   <el-button size="small" type="primary">Ubah Harga</el-button>
                 </template>
                 <div style="display: flex; flex-direction: column; gap: 5px">
                   <div class="secondary-text">Masukkan harga baru</div>
-                  <div class="secondary-text">{{ ubahHargaPaketSewaValueRupiah }}</div>
+                  <div class="secondary-text">{{ ubahHargaMenuKonsumsiValueRupiah }}</div>
                   <div style="display: flex; gap: 5px">
-                    <el-input style="width: 150px" size="small" v-model.number="ubahHargaPaketSewaValue" />
-                    <el-button @click="ubahHargaPaketSewa(scope.row.id)" size="small" type="success">Ubah</el-button>
+                    <el-input style="width: 150px" size="small" v-model.number="ubahHargaMenuKonsumsiValue" />
+                    <el-button @click="ubahHargaMenuKonsumsi(scope.row.id)" size="small" type="success">Ubah</el-button>
                   </div>
                 </div>
               </el-popover>
-              <el-popconfirm @confirm="deletePaketSewa(scope.row.id)" title="Yakin ingin menghapus ?" width="max-content" confirm-button-text="Ya" cancel-button-text="Batal" confirm-button-type="danger">
+              <el-popconfirm @confirm="deleteMenuKonsumsi(scope.row.id)" title="Yakin ingin menghapus ?" width="max-content" confirm-button-text="Ya" cancel-button-text="Batal" confirm-button-type="danger">
                 <template #reference>
                   <el-button size="small" type="danger">Hapus</el-button>
                 </template>
@@ -133,23 +132,23 @@ const deletePaketSewa = (versi: number) => {
 </template>
 
 <style>
-.form-pengaturan-sewa {
+.form-pengaturan-menu-konsumsi {
   display: flex;
   gap: 10px;
   align-items: flex-end;
   justify-content: center;
 }
-.column-aksi-sewa {
+.column-aksi-menu-konsumsi {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
   align-items: center;
   justify-content: center;
 }
-.drawer-pengaturan-sewa-container > .el-drawer__body {
+.drawer-pengaturan-menu-konsumsi-container > .el-drawer__body {
   padding-top: 0;
 }
-.drawer-pengaturan-sewa-container > .el-drawer__header {
+.drawer-pengaturan-menu-konsumsi-container > .el-drawer__header {
   padding-bottom: 20px;
   margin-bottom: 10px;
   border-bottom: 1px solid var(--el-fill-color);

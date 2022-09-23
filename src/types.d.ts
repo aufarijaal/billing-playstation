@@ -13,3 +13,7 @@ interface PaketSewa {
   nama_paket: string;
   harga_12_jam: number;
 }
+interface MenuKonsumsi {
+  nama_barang: string;
+  harga: number;
+}

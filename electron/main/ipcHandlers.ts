@@ -1,9 +1,27 @@
 /* eslint-disable no-unused-vars */
 import { ipcMain } from "electron";
-import { stat } from "fs";
+import { stat, writeFile } from "fs";
 import { join } from "path";
+import { logger } from "../winston";
 import * as dbhelper from "./sqlite/dbhelper";
 import { appDirectory } from "./sqlite/knexfile";
+
+ipcMain.handle("do:save-settings", (event, stringifiedJson) => {
+  logger.info("Menyimpan settings...");
+  return new Promise((resolve, reject) => {
+    stat(join(appDirectory, "settings.txt"), (err, stats) => {
+      logger.warn("File settings tidak ada. sedang membuat...");
+      writeFile(join(appDirectory, "settings.txt"), stringifiedJson, (err) => {
+        if (err) {
+          logger.error("Gagal membuat file settings. alasan: " + err.message);
+          reject("Gagal membuat file settings. alasan: " + err.message);
+        } else {
+          logger.info("Berhasil menyimpan settings.");
+        }
+      });
+    });
+  });
+});
 
 ipcMain.handle("db:filesize", (event) => {
   return new Promise((resolve, reject) => {
