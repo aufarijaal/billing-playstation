@@ -8,7 +8,6 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     BillingComponent: typeof import('./src/components/BillingComponent.vue')['default']
-    DrawerContainer: typeof import('./src/components/drawers/DrawerContainer.vue')['default']
     DrawerLaporanBilling: typeof import('./src/components/drawers/DrawerLaporanBilling.vue')['default']
     DrawerPengaturanAdmin: typeof import('./src/components/drawers/DrawerPengaturanAdmin.vue')['default']
     DrawerPengaturanAplikasi: typeof import('./src/components/drawers/DrawerPengaturanAplikasi.vue')['default']
@@ -30,10 +29,8 @@ declare module '@vue/runtime-core' {
     ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElProgress: typeof import('element-plus/es')['ElProgress']
-    ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
-    ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
@@ -43,14 +40,7 @@ declare module '@vue/runtime-core' {
     LoginDialog: typeof import('./src/components/dialogs/LoginDialog.vue')['default']
     MainContent: typeof import('./src/components/MainContent.vue')['default']
     MejaMain: typeof import('./src/components/MejaMain.vue')['default']
-    PengaturanAdmin: typeof import('./src/components/PengaturanAdmin.vue')['default']
-    PengaturanAplikasi: typeof import('./src/components/PengaturanAplikasi.vue')['default']
-    PengaturanKonsumsi: typeof import('./src/components/PengaturanKonsumsi.vue')['default']
-    PengaturanSewa: typeof import('./src/components/PengaturanSewa.vue')['default']
     StatusBar: typeof import('./src/components/StatusBar.vue')['default']
     WindowFrame: typeof import('./src/components/WindowFrame.vue')['default']
-  }
-  export interface ComponentCustomProperties {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
